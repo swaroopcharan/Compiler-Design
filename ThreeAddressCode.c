@@ -1,51 +1,117 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-
-struct three
+#include"stdio.h"
+#include"conio.h"
+#include"string.h"
+int i=1,j=0,no=0,tmpch=90;
+char str[100],left[15],right[15];
+void findopr();
+void explore();
+void fleft(int);
+void fright(int);
+struct exp
 {
-  char data[10],temp[7];
-}s[30];
-
+ int pos;
+ char op;
+}k[15];
 void main()
 {
-  
-  char d1[7],d2[7]="t";
-  int i=0,j=1,len=0;
-  FILE *f1,*f2;
-  f1=fopen("sum.txt","r");
-  f2=fopen("out.txt","w");
-  while(fscanf(f1,"%s",s[len].data)!=EOF)
-  len++;
-  itoa(j,d1,7);
-  strcat(d2,d1);
-  strcpy(s[j].temp,d2);
-  strcpy(d1,"");
-  strcpy(d2,"t");
-  if(!strcmp(s[3].data,"+"))
+ printf("\t\tINTERMEDIATE CODE GENERATION\n\n");
+ printf("Enter the Expression :");
+ scanf("%s",str);
+ printf("The intermediate code:\t\tExpression\n");
+ findopr();
+ explore();
+ getch();
+}
+void findopr()
+{
+ for(i=0;str[i]!='\0';i++)
+  if(str[i]==':')
   {
-    fprintf(f2,"%s=%s+%s",s[j].temp,s[i+2].data,s[i+4].data);
-    j++;
+  k[j].pos=i;  fleft(k[i].pos);
+  fright(k[i].pos);
+  k[j++].op=':';
   }
-  else if(!strcmp(s[3].data,"-"))
+ for(i=0;str[i]!='\0';i++)
+  if(str[i]=='/')
   {
-    fprintf(f2,"%s=%s-%s",s[j].temp,s[i+2].data,s[i+4].data);
-    j++;
+  k[j].pos=i;
+  k[j++].op='/';
   }
-  for(i=4;i<len-2;i+=2)
+ for(i=0;str[i]!='\0';i++)
+  if(str[i]=='*')
   {
-    itoa(j,d1,7);
-    strcat(d2,d1);
-    strcpy(s[j].temp,d2);
-    if(!strcmp(s[i+1].data,"+"))
-    fprintf(f2,"\n%s=%s+%s",s[j].temp,s[j-1].temp,s[i+2].data);
-    else if(!strcmp(s[i+1].data,"-"))
-    fprintf(f2,"\n%s=%s-%s",s[j].temp,s[j-1].temp,s[i+2].data);
-    strcpy(d1,"");
-    strcpy(d2,"t");
-    j++;
+  k[j].pos=i;
+  k[j++].op='*';
   }
-  fprintf(f2,"\n%s=%s",s[0].data,s[j-1].temp);
-  fclose(f1);
-  fclose(f2);
+ for(i=0;str[i]!='\0';i++)
+  if(str[i]=='+')
+  {
+  k[j].pos=i;
+  k[j++].op='+';
+  }
+ for(i=0;str[i]!='\0';i++)
+  if(str[i]=='-')
+  {
+  k[j].pos=i;
+  k[j++].op='-';
+  }
+}
+void explore()
+{
+ i=1;
+ while(k[i].op!='\0')
+ {
+  fleft(k[i].pos);
+  fright(k[i].pos);
+  str[k[i].pos]=tmpch--;
+  printf("\t%c := %s%c%s\t\t",str[k[i].pos],left,k[i].op,right);
+  for(j=0;j <strlen(str);j++)
+   if(str[j]!='$')
+    printf("%c",str[j]);
+  printf("\n");
+  i++;
+ }
+ fright(-1);
+ if(no==0)
+ {
+  fleft(strlen(str));
+  printf("\t%s := %s",right,left);
+  getch();
+  exit(0);  if(str[i]==':')
+  {
+ }
+ printf("\t%s :=  %c",right,str[k[--i].pos]);
+ getch();
+}
+void fleft(int x)
+{
+ int w=0,flag=0;
+ x--;
+ while(x!= -1 &&str[x]!= '+' &&str[x]!='*'&&str[x]!='='&&str[x]!='\0'&&str[x]!='-'&&str[x]!='/'&&str[x]!=':')
+ {
+  if(str[x]!='$'&& flag==0)
+  {
+  left[w++]=str[x];
+  left[w]='\0';
+  str[x]='$';
+  flag=1;
+  }
+  x--;
+ }
+}
+void fright(int x)
+{
+ int w=0,flag=0;
+ x++;
+ while(x!= -1 && str[x]!= '+'&&str[x]!='*'&&str[x]!='\0'&&str[x]!='='&&str[x]!=':'&&str[x]!='-'&&str[x]!='/')
+ {
+  if(str[x]!='$'&& flag==0)
+  {
+  right[w++]=str[x];
+  right[w]='\0';
+  str[x]='$';
+  flag=1;
+  }
+  x++;
+ }
 }
