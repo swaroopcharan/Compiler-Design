@@ -63,10 +63,10 @@ void main()
                     break;
                 }
           }
-break
+          break;
 
-case 3:
-printf("Enter the expression with relational operator");
+       case 3:
+       printf("Enter the expression with relational operator");
 scanf("%s%s%s",&id1,&op,&id2);
 if(((strcmp(op,"<")==0)||(strcmp(op,">")==0)||(strcmp(op,"<=")==0)||(strcmp(op,">=")==0)||(strcmp(op,"==")==0)||(strcmp(op,"!=")==0))==0)
 printf("Expression is error");
